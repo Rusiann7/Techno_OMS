@@ -1,5 +1,5 @@
 <template>
-  <h1>Heil Hitler</h1>
+  <h1>Welcome to the homepage</h1>
 </template>
 
 <script></script>
