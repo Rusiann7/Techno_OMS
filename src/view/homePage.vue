@@ -22,7 +22,7 @@
     </p>
 
     <button class="button-cancel" @click="this.modal = false">Cancel</button>
-    <button class="button" @click="addCart(this.selected, this.quantity, this.request)">
+    <button class="button" @click="addCart(this.quantity, this.request, this.selected_id)">
       Add to cart
     </button>
   </div>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="container">
-      <div class="item">
+      <div class="item" v-for="product in items" :key="product.product_id">
         <img
           src="../asset/logo5.png"
           alt="image"
@@ -49,75 +49,29 @@
           "
         />
         <div class="title">
-          <h2>Custon IT Mug</h2>
-          <h3 style="color: blueviolet">$12</h3>
+          <h2>{{ product.product_name }}</h2>
+          <h3 style="color: blueviolet">${{ product.product_price }}</h3>
         </div>
-        <p>Premium ceramic mug with custom IT-themed sublimation printing.</p>
-        <button class="btn" @click="modalOpen('Custom IT Mug', 12)">Order Now</button>
+        <p>{{ product.product_desc }}</p>
+        <button
+          class="btn"
+          @click="modalOpen(product.product_name, product.product_price, product.product_id)"
+        >
+          Order Now
+        </button>
       </div>
-
-      <!--2nd item-->
-
-      <div class="item">
-        <img
-          src="../asset/logo5.png"
-          alt="image"
-          style="
-            max-width: 300px;
-            width: 100%;
-            height: auto;
-            margin-bottom: 80px;
-            border-radius: 80px;
-          "
-        />
-        <div class="title">
-          <h2>Tech Tote Bag</h2>
-          <h3 style="color: blueviolet">$18</h3>
-        </div>
-        <p>Durable canvas tote bag with custom DTF printed tach designs.</p>
-        <button class="btn">Order Now</button>
-      </div>
-
-      <!--3rd item-->
-      <div class="item">
-        <img
-          src="../asset/logo5.png"
-          alt="image"
-          style="
-            max-width: 300px;
-            width: 100%;
-            height: auto;
-            margin-bottom: 80px;
-            border-radius: 80px;
-          "
-        />
-        <div class="title">
-          <h2>Developer Wallet</h2>
-          <h3 style="color: blueviolet">$24</h3>
-        </div>
-        <p>Premium leather wallet with personalized IT graphics.</p>
-        <button class="btn">Order Now</button>
-      </div>
-
-      <!--4th item-->
-      <div class="item">
-        <img
-          src="../asset/logo5.png"
-          alt="image"
-          style="
-            max-width: 300px;
-            width: 100%;
-            height: auto;
-            margin-bottom: 80px;
-            border-radius: 80px;
-          "
-        />
-        <div class="title">
-          <h2>Code Handkerchief</h2>
-          <h3 style="color: blueviolet">$8</h3>
-        </div>
-        <p>Soft cotton Handkerchief with custom IT-themed pattern.</p>
-        <button class="btn">Order Now</button>
+    </div>
+    <div>
+      <h3>Your cart</h3>
+      <div v-for="cart in cart" :key="cart.product_id">
+        <ul>
+          <li>{{ cart.product_name }}</li>
+          <li>{{ cart.category }}</li>
+          <li>{{ cart.price }}</li>
+          <li>{{ cart.quantity }}</li>
+          <li>{{ cart.request }}</li>
+          <li>{{ cart.created_at }}</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -129,49 +83,24 @@ export default {
   data() {
     return {
       items: [],
-      orderAPI: null,
+      orderAPI: 'http://localhost:8000/productGetter.php',
       isLoading: false,
       modal: false,
       selected: null,
       selected_cost: 0,
       quantity: 1,
       request: null,
-      cartAPI: null,
+      cartAPI: 'http://localhost:8000/addCart.php',
+      itemsAPI: 'http://localhost:8000/productGetter.php',
+      selected_id: 0,
+      user_id: 1,
+      cart: [],
+      getCartItemsAPI: 'http://localhost:8000/getCartItems.php',
     }
   },
 
   methods: {
-    async orderItem(item, qnt) {
-      try {
-        this.isLoading = true
-
-        const response = await fetch(this.orderAPI, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ action: 'getOrderFunction', prod: item, no: qnt }),
-        })
-
-        const result = await response
-
-        if (result.success) {
-          console.log('Success')
-          this.isLoading = false
-        } else {
-          this.isLoading = false
-          console.log('Error')
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-
-    addCart(item, qnt, request) {
-      console.log(item, qnt, request)
-    },
-
-    /* async addCart(item, qnt, request) {
+    async addCart(qnt, request, id) {
       try {
         this.isLoading = true
 
@@ -182,29 +111,92 @@ export default {
           },
           body: JSON.stringify({
             action: 'addToCart',
-            itemName: item,
-            itemQuantiy: qnt,
+            itemId: id,
+            itemQuantity: qnt,
             itemRequest: request,
+            userId: this.user_id,
           }),
         })
 
-        const result = await response
+        const result = await response.json()
 
         if (result.success) {
-          console.log('you have added', item, qnt, request)
+          this.isLoading = false
+          alert('Added the items: ' + qnt + ', ' + request + ', ' + id)
+          this.getCartItems()
         } else {
           console.log('Error')
         }
       } catch (error) {
         console.log(error)
       }
-    }, */
+    },
 
-    modalOpen(itemName, itemCost) {
+    async getItems() {
+      try {
+        this.isLoading = true
+
+        const response = await fetch(this.itemsAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'getProducts',
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.items = result.products
+          this.isLoading = false
+        } else {
+          console.log('error')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async getCartItems() {
+      try {
+        this.isLoading = false
+
+        const response = await fetch(this.getCartItemsAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'getItemsCart',
+            userId: this.user_id,
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.cart = result.cart
+        } else {
+          console.log('Error')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    modalOpen(itemName, itemCost, itemId) {
       this.selected = itemName
       this.selected_cost = itemCost
+      this.selected_id = itemId
       this.modal = true
     },
+  },
+
+  mounted() {
+    this.getItems()
+    this.getCartItems()
   },
 }
 </script>

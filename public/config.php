@@ -10,18 +10,18 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header('Access-Control-Max-Age: 86400');
 header('Content-Type: application/json; charset=utf-8');
 
-require __DIR__ . '../../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
     header('Content-Type: application/json; charset=utf-8');
 }
 
-$host ="rusiann7.helioho.st";
-$user ="rusiann7_rusari";
-$password="kDgdF3f8jiX~!1si";
-$dbname="rusiann7_technoDB";
+$host ="127.0.0.1";
+$user ="root";
+$password="123456";
+$dbname="OMS";
 
-$conn = new mysqli($host, $user, $password, $dbname);
+$conn = new mysqli($host, $user, $password, $dbname, 3306);
 
 if($conn->connect_error) {
     http_response_code(500);
