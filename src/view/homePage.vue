@@ -63,16 +63,31 @@
     </div>
     <div>
       <h3>Your cart</h3>
-      <div v-for="cart in cart" :key="cart.product_id">
-        <ul>
-          <li>{{ cart.product_name }}</li>
-          <li>{{ cart.category }}</li>
-          <li>{{ cart.price }}</li>
-          <li>{{ cart.quantity }}</li>
-          <li>{{ cart.request }}</li>
-          <li>{{ cart.created_at }}</li>
-        </ul>
+      <div v-for="cart in cart" :key="cart.cartId" class="cartitems">
+        <div style="width: 5%; display: flex; justify-content: center; align-items: center">
+          <input type="checkbox" :value="cart.cartId" v-model="checkout" />
+        </div>
+        <div style="width: 80%">
+          <h3>{{ cart.product_name }}</h3>
+          <p>{{ cart.category }}</p>
+          <p>{{ cart.request }}</p>
+          <p>{{ cart.created_at }}</p>
+        </div>
+
+        <div style="width: 10%">
+          <p>
+            <b>{{ cart.price }} X {{ cart.quantity }}</b>
+          </p>
+          <p>
+            <b>Total: {{ cart.price * cart.quantity }}</b>
+          </p>
+        </div>
       </div>
+
+      <p>Subtotal: {{ subtotal }}</p>
+      <p>selected: {{ selected_items }}</p>
+
+      <button @click="checkoutItems()">Checkout</button>
     </div>
   </div>
 </template>
@@ -83,7 +98,7 @@ export default {
   data() {
     return {
       items: [],
-      orderAPI: 'http://localhost:8000/productGetter.php',
+      orderAPI: 'http://localhost:8000/orderItems.php',
       isLoading: false,
       modal: false,
       selected: null,
@@ -96,6 +111,7 @@ export default {
       user_id: 1,
       cart: [],
       getCartItemsAPI: 'http://localhost:8000/getCartItems.php',
+      checkout: [],
     }
   },
 
@@ -186,6 +202,36 @@ export default {
       }
     },
 
+    async checkoutItems() {
+      try {
+        this.isLoading = true
+
+        const response = await fetch(this.orderAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'orderItems',
+            items: this.checkout,
+            userId: this.user_id,
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          alert('success')
+          this.getCartItems()
+        } else {
+          alert('failed')
+          this.isLoading = false
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     modalOpen(itemName, itemCost, itemId) {
       this.selected = itemName
       this.selected_cost = itemCost
@@ -197,6 +243,18 @@ export default {
   mounted() {
     this.getItems()
     this.getCartItems()
+  },
+
+  computed: {
+    subtotal() {
+      return this.cart.reduce((total, item) => {
+        return total + item.price * item.quantity
+      }, 0)
+    },
+
+    selected_items() {
+      return this.checkout
+    },
   },
 }
 </script>
@@ -227,5 +285,11 @@ export default {
   display: flex;
   gap: 100px;
   align-items: center;
+}
+
+.cartitems {
+  display: flex;
+  border: solid black 10px;
+  margin: 10px;
 }
 </style>

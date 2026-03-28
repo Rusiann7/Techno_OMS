@@ -1,6 +1,7 @@
 <?php
 
 require 'config.php';
+require 'functions.php';
 
 $data = json_decode(file_get_contents('php://input'), true) ?? [];
 $action = $data['action'] ?? '';
@@ -10,10 +11,14 @@ if($action === "getItemsCart"){
     $user_id = $data['userId'];
     $cart = [];
 
-    $sql = "SELECT p.product_name, p.category, p.price, c.quantity, c.request, c.created_at, c.product_id
+    $sql = "
+    SELECT p.product_name, p.category, p.price, c.quantity, 
+    c.request, c.created_at, c.product_id, c.id AS cartId,
+    c.is_checkout
     FROM Cart c 
     INNER JOIN Products p ON p.id = c.product_id
-    WHERE user_id = $user_id";
+    WHERE user_id = $user_id AND c.is_checkout = 0
+    ORDER BY c.created_at";
 
     $result = $conn -> query($sql);
 
@@ -27,7 +32,8 @@ if($action === "getItemsCart"){
                 "quantity" => $row['quantity'],
                 "request" => $row['request'],
                 "created_at" => $row['created_at'],
-                "product_id" => $row['product_id']
+                "product_id" => $row['product_id'],
+                "cartId" => $row['cartId'],
             ];
         }
         
