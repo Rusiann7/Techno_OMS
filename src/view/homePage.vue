@@ -38,7 +38,7 @@
     <div class="container">
       <div class="item" v-for="product in items" :key="product.product_id">
         <img
-          src="../asset/logo5.png"
+          src="../asset/teto.jpg"
           alt="image"
           style="
             max-width: 300px;
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div>
-      <h3>Your cart</h3>
+      <h3>Your cart {{ cartItemsCount }}</h3>
       <div v-for="cart in cart" :key="cart.cartId" class="cartitems">
         <div style="width: 5%; display: flex; justify-content: center; align-items: center">
           <input type="checkbox" :value="cart.cartId" v-model="checkout" />
@@ -76,10 +76,10 @@
 
         <div style="width: 10%">
           <p>
-            <b>{{ cart.price }} X {{ cart.quantity }}</b>
+            <b>$ {{ cart.price }} X {{ cart.quantity }} qnt.</b>
           </p>
           <p>
-            <b>Total: {{ cart.price * cart.quantity }}</b>
+            <b>Total: $ {{ cart.price * cart.quantity }}</b>
           </p>
         </div>
       </div>
@@ -88,6 +88,34 @@
       <p>selected: {{ selected_items }}</p>
 
       <button @click="checkoutItems()">Checkout</button>
+    </div>
+
+    <div>
+      <h3>Your Orders {{ orderItemsCount }}</h3>
+
+      <div v-for="orders in orders" :key="orders.cartId" class="cartitems">
+        <div style="width: 5%; display: flex; justify-content: center; align-items: center">
+          <p>Status</p>
+          <br />
+          <p v-if="orders.status === 'Completed'">completed</p>
+          <p v-if="orders.status === 'Pending'">pending</p>
+        </div>
+        <div style="width: 80%">
+          <h3>{{ orders.product_name }}</h3>
+          <p>{{ orders.category }}</p>
+          <p>{{ orders.request }}</p>
+          <p>{{ orders.created_at }}</p>
+        </div>
+
+        <div style="width: 10%">
+          <p>
+            <b>$ {{ orders.price }} X {{ orders.quantity }} qnt.</b>
+          </p>
+          <p>
+            <b>Total: $ {{ orders.price * orders.quantity }}</b>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -112,6 +140,8 @@ export default {
       cart: [],
       getCartItemsAPI: 'http://localhost:8000/getCartItems.php',
       checkout: [],
+      getOrderItemsAPI: 'http://localhost:8000/getOrders.php',
+      orders: [],
     }
   },
 
@@ -223,8 +253,38 @@ export default {
         if (result.success) {
           alert('success')
           this.getCartItems()
+          this.getOrderItems()
         } else {
           alert('failed')
+          this.isLoading = false
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async getOrderItems() {
+      try {
+        this.isLoading = true
+
+        const response = await fetch(this.getOrderItemsAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'getOrders',
+            userId: this.user_id,
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.orders = result.orders
+          this.isLoading = false
+        } else {
+          console.log('Error')
           this.isLoading = false
         }
       } catch (error) {
@@ -243,6 +303,7 @@ export default {
   mounted() {
     this.getItems()
     this.getCartItems()
+    this.getOrderItems()
   },
 
   computed: {
@@ -254,6 +315,14 @@ export default {
 
     selected_items() {
       return this.checkout
+    },
+
+    cartItemsCount() {
+      return this.cart.length
+    },
+
+    orderItemsCount() {
+      return this.orders.length
     },
   },
 }

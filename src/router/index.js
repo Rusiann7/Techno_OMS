@@ -3,6 +3,8 @@ import { isAuthenticated } from '@/utils/auth'
 
 const homePage = () => import('../view/homePage.vue')
 const orderPage = () => import('../view/orderPage.vue')
+const adminPage = () => import('../view/adminPage.vue')
+const logIn = () => import('../view/landingPage.vue')
 
 const routes = [
   {
@@ -17,6 +19,20 @@ const routes = [
     name: 'Orderpage',
     component: orderPage,
     meta: { title: 'Order', requiresAuth: true },
+  },
+
+  {
+    path: '/admin',
+    name: 'adminPage',
+    component: adminPage,
+    meta: { title: 'Admin', requiresAuth: false },
+  },
+
+  {
+    path: '/login',
+    name: 'logIn',
+    component: logIn,
+    meta: { title: 'Login', requiresAuth: false },
   },
 ]
 
