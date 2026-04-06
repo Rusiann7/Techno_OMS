@@ -6,5 +6,7 @@
             "email": "Rusiann7@protonmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "firebase/php-jwt": "^7.0"
+    }
 }

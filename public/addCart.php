@@ -15,7 +15,7 @@ if($action === "addToCart"){
     $randomString = getRandomString(10);
 
     $sql = "INSERT INTO Cart (product_id, user_id, quantity, request, reference_code, is_checkout, is_completed)
-    VALUE ($itemId, $userId, $itemQuantity, '$itemRequest', '$randomString', 0, 0);";
+    VALUES ($itemId, $userId, $itemQuantity, '$itemRequest', '$randomString', 0, 0);";
 
     if($conn -> query($sql) === true) {
         echo json_encode(["success" => true]);

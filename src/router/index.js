@@ -5,6 +5,8 @@ const homePage = () => import('../view/homePage.vue')
 const orderPage = () => import('../view/orderPage.vue')
 const adminPage = () => import('../view/adminPage.vue')
 const logIn = () => import('../view/landingPage.vue')
+const pageError = () => import('../view/notFound.vue')
+const loginAdmin = () => import('../view/adminLogin.vue')
 
 const routes = [
   {
@@ -33,6 +35,20 @@ const routes = [
     name: 'logIn',
     component: logIn,
     meta: { title: 'Login', requiresAuth: false },
+  },
+
+  {
+    path: '/login-admin',
+    name: 'loginAdmin',
+    component: loginAdmin,
+    meta: { title: 'Login', requiresAuth: false },
+  },
+
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'errorPage',
+    component: pageError,
+    meta: { title: '404 Error', requiresAuth: false },
   },
 ]
 
