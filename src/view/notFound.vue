@@ -6,7 +6,7 @@
       <br />
 
       <img
-        src="../assets/logo4.png"
+        src="../asset/logo4.png"
         alt="edurate logo"
         style="
           max-width: 250px;
