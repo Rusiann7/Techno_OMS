@@ -207,7 +207,7 @@ export default {
 
         if (result.success) {
           this.isLoading = false
-          this.modal = 'signup'
+          this.modal = 'login'
         } else {
           this.isLoading = false
         }
@@ -223,14 +223,15 @@ export default {
 
 .landing-wrapper {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, #a21caf 0%, #db2777 30%, #ea580c 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem 2rem;
+  justify-content: center;
+  padding: 1rem;
   color: white;
-  margin: 0;
+  overflow: hidden;
 }
 
 /* Header */
@@ -243,7 +244,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .printer-icon {
@@ -252,18 +253,18 @@ export default {
   padding: 0.6rem;
   border-radius: 50%;
   display: flex;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .brand-name {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 800;
-  margin: 0.3rem 0 0 0;
+  margin: 0.5rem 0 0 0;
   letter-spacing: -0.02em;
 }
 
 .brand-tagline {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   opacity: 0.9;
   font-weight: 500;
 }
@@ -271,7 +272,7 @@ export default {
 /* Content Layout (Centered) */
 .content-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
 }
 
 .auth-card {
@@ -287,7 +288,7 @@ export default {
 
 /* Card Header */
 .card-header {
-  padding: 1.75rem 1.5rem 1rem;
+  padding: 1.5rem 1.5rem 1rem;
   text-align: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -295,14 +296,14 @@ export default {
 .role-icon {
   background: #0ea5e9;
   color: white;
-  width: 40px;
-  height: 100%;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 0.8rem;
-  box-shadow: 0 6px 15px rgba(14, 165, 233, 0.25);
+  margin: 0 auto 0.75rem;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
 }
 
 .role-title {
@@ -316,7 +317,7 @@ export default {
 .role-subtitle {
   color: #64748b;
   font-size: 0.8rem;
-  margin: 0.3rem 0 0;
+  margin: 0.25rem 0 0;
   font-weight: 500;
   opacity: 0.8;
 }
@@ -324,41 +325,41 @@ export default {
 /* Card Content */
 .card-content {
   background: white;
-  padding: 1.75rem;
+  padding: 1.75rem 2rem 2rem;
 }
 
 .tabs-group {
   display: flex;
   background: #f1f5f9;
-  padding: 0.3rem;
-  border-radius: 14px;
-  margin-bottom: 1.75rem;
+  padding: 0.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .tab-btn {
   flex: 1;
-  padding: 0.7rem;
-  border-radius: 12px;
+  padding: 0.65rem;
+  border-radius: 10px;
   border: none;
   background: transparent;
   color: #64748b;
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tab-btn.active {
   background: white;
   color: #0ea5e9;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 /* Form Styles */
 .auth-box {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .input-field {
@@ -371,16 +372,16 @@ export default {
   font-size: 0.75rem;
   font-weight: 800;
   color: #1e293b;
-  margin-left: 0.25rem;
+  margin-left: 0.15rem;
 }
 
 .input-field input {
-  padding: 0.8rem 1rem;
-  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
   border: 1.5px solid #e2e8f0;
   background: #f8fafc;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   transition: all 0.2s;
   color: #1e293b;
 }
@@ -394,19 +395,19 @@ export default {
 
 .primary-gradient-btn {
   margin-top: 0.5rem;
-  padding: 0.9rem;
-  border-radius: 14px;
+  padding: 0.85rem;
+  border-radius: 12px;
   border: none;
   color: white;
   font-weight: 800;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #2563eb, #0ea5e9);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 6px 15px rgba(14, 165, 233, 0.2);
 }
 
 .primary-gradient-btn:hover:not(:disabled) {

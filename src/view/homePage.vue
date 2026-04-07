@@ -65,7 +65,7 @@
             </svg>
           </button>
 
-          <button class="logout-link">
+          <button class="logout-link" @click="logout">
             <svg
               width="18"
               height="18"
@@ -428,6 +428,12 @@ export default {
       this.selected_cost = itemCost
       this.selected_id = itemId
       this.modal = true
+    },
+
+    logout() {
+      this.$router.replace('/login')
+      localStorage.setItem('user_id', 0)
+      localStorage.setItem('fullName', 0)
     },
   },
 

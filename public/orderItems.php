@@ -13,16 +13,17 @@ if($action === "orderItems"){
     $cartId = implode(",", $items);
     $randomString = getRandomString(10);
 
-    $sql = "UPDATE Cart SET is_checkout = 1 WHERE user_id = $userID AND id = $cartId";
+    $sql = "UPDATE Cart SET is_checkout = 1 WHERE user_id = $userID AND id IN ($cartId)";
 
     if($conn->query($sql) === true){
         echo json_encode(["success" => true]);
     }else{
-        echo json_encode(["sucess" => false, "message" => "Error DB"]);
         http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Error DB"]);
+        
     }
 
 }else {
-    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "Invalid Action"]);
 }

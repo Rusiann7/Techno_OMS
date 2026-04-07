@@ -47,6 +47,6 @@ if($action === "getOrders"){
     }
 
 }else {
-    echo json_encode(["success" => false, "message" => "Invalid Actions"]);
+    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
 }
