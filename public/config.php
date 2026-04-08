@@ -17,10 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
     header('Content-Type: application/json; charset=utf-8');
 }
 
-$host ="127.0.0.1";
-$user ="root";
-$password="123456";
-$dbname="OMS";
+$host ="rusiann7.helioho.st";
+$user ="rusiann7_rusiar";
+$password="iuUn3704^";
+$dbname="rusiann7_OMSSys";
 
 $conn = new mysqli($host, $user, $password, $dbname, 3306);
 
