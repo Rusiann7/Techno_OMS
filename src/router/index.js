@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { isAuthenticated } from '@/utils/auth'
 
 const homePage = () => import('../view/homePage.vue')
-const orderPage = () => import('../view/orderPage.vue')
 const adminPage = () => import('../view/adminPage.vue')
 const logIn = () => import('../view/landingPage.vue')
 const pageError = () => import('../view/notFound.vue')
 const loginAdmin = () => import('../view/adminLogin.vue')
+const test = () => import('../view/test.vue')
 
 const routes = [
   {
@@ -17,17 +17,10 @@ const routes = [
   },
 
   {
-    path: '/order',
-    name: 'Orderpage',
-    component: orderPage,
-    meta: { title: 'Order', requiresAuth: true },
-  },
-
-  {
     path: '/admin',
     name: 'adminPage',
     component: adminPage,
-    meta: { title: 'Admin', requiresAuth: false },
+    meta: { title: 'Admin', requiresAuth: true },
   },
 
   {
@@ -49,6 +42,13 @@ const routes = [
     name: 'errorPage',
     component: pageError,
     meta: { title: '404 Error', requiresAuth: false },
+  },
+
+  {
+    path: '/testtesttest',
+    name: 'testPage',
+    component: test,
+    meta: { title: 'test', requiresAuth: false },
   },
 ]
 

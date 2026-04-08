@@ -112,6 +112,11 @@
 </template>
 
 <script>
+//const url2 = "https://rusiann7.helioho.st";
+const url2 = 'https://star-panda-literally.ngrok-free.app'
+//const url2 = "http://localhost:8000";
+//const url2 = "http://localhost";
+
 export default {
   name: 'loginA',
 
@@ -119,7 +124,7 @@ export default {
     return {
       login: { email: '', password: '' },
       isLoading: false,
-      loginAPI: 'http://localhost:8000/loginAPI-admin.php',
+      loginAPI: `${url2}/loginAPI-admin.php`,
     }
   },
 

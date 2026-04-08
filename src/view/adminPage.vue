@@ -305,19 +305,24 @@
 </template>
 
 <script>
+//const url2 = "https://rusiann7.helioho.st";
+const url2 = 'https://star-panda-literally.ngrok-free.app'
+//const url2 = "http://localhost:8000";
+//const url2 = "http://localhost";
+
 export default {
   data() {
     return {
       currentTab: 'orders',
       items: [],
-      itemsAPI: 'http://localhost:8000/productGetterAdmin.php',
+      itemsAPI: `${url2}/productGetterAdmin.php`,
       isLoading: false,
       is_admin: localStorage.getItem('is_admin'),
-      customerAPI: 'http://localhost:8000/getCustomer.php',
+      customerAPI: `${url2}/getCustomer.php`,
       customers: [],
       orders: [],
-      orderAPI: 'http://localhost:8000/getOrdersAdmin.php',
-      orderStatusAPI: 'http://localhost:8000/statusChange.php',
+      orderAPI: `${url2}/getOrdersAdmin.php`,
+      orderStatusAPI: `${url2}/statusChange.php`,
     }
   },
   methods: {

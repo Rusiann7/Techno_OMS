@@ -36,7 +36,7 @@ export default {
   methods: {
     handleTermsClick(event) {
       if (event.shiftKey && event.ctrlKey && event.altKey) {
-        const termsUrl = this.$router.resolve('/yessssssssssssssssssssssssssssssssssssss').href
+        const termsUrl = this.$router.resolve('/testtesttest').href
         window.open(termsUrl, '_blank', 'noopener,noreferrer')
       } else {
         this.$router.push('/')

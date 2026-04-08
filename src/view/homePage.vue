@@ -243,32 +243,87 @@
     <div class="success" v-if="isSuccess">
       <span>Task successfully executed!</span>
     </div>
+
+    <!-- Auth Prompt Modal -->
+    <div class="modal-backdrop" v-if="authModal" @click.self="authModal = false">
+      <div class="modal-card" style="text-align: center; max-width: 400px; padding: 3rem 2rem">
+        <div
+          style="
+            background: #f3e8ff;
+            display: inline-flex;
+            padding: 1.25rem;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+          "
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7c3aed"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" x2="3" y1="12" y2="12" />
+          </svg>
+        </div>
+        <h3 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 0 0 0.75rem 0">
+          Authentication Required
+        </h3>
+        <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.6">
+          You need to be signed in to place a custom order or manage your cart with DevSparks.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem">
+          <button
+            class="primary-btn-gradient"
+            @click="this.$router.push('/login')"
+            style="width: 100%; border-radius: 14px"
+          >
+            Sign In / Sign Up
+          </button>
+          <button class="secondary-btn" @click="authModal = false" style="width: 100%">
+            Maybe Later
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+//const url2 = "https://rusiann7.helioho.st";
+const url2 = 'https://star-panda-literally.ngrok-free.app'
+//const url2 = "http://localhost:8000";
+//const url2 = "http://localhost";
+
 export default {
   name: 'homePage',
   data() {
     return {
       items: [],
-      orderAPI: 'http://localhost:8000/orderItems.php',
+      orderAPI: `${url2}/orderItems.php`,
       isLoading: false,
       modal: false,
       cartModal: false,
       ordersModal: false,
+      authModal: false,
       selected: null,
       selected_cost: 0,
       quantity: 1,
       request: null,
-      cartAPI: 'http://localhost:8000/addCart.php',
-      itemsAPI: 'http://localhost:8000/productGetter.php',
+      cartAPI: `${url2}/addCart.php`,
+      itemsAPI: `${url2}/productGetter.php`,
       selected_id: 0,
       user_id: localStorage.getItem('user_id'),
       cart: [],
-      getCartItemsAPI: 'http://localhost:8000/getCartItems.php',
+      getCartItemsAPI: `${url2}/getCartItems.php`,
       checkout: [],
-      getOrderItemsAPI: 'http://localhost:8000/getOrders.php',
+      getOrderItemsAPI: `${url2}/getOrders.php`,
       orders: [],
       isSuccess: false,
       isFailed: false,
@@ -424,6 +479,10 @@ export default {
     },
 
     modalOpen(itemName, itemCost, itemId) {
+      if (!this.user_id || this.user_id === '0') {
+        this.authModal = true
+        return
+      }
       this.selected = itemName
       this.selected_cost = itemCost
       this.selected_id = itemId
