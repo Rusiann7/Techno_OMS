@@ -17,7 +17,7 @@
           style="max-width: 480px; width: 100%; height: auto"
         />
         <img
-          src="../assets/logo5.png"
+          src="../asset/logo5.png"
           alt="yes"
           style="max-width: 480px; width: 100%; height: auto"
         />
