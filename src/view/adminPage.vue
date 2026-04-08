@@ -216,8 +216,18 @@
                 <td class="text-muted">{{ order.created_at }}</td>
                 <td>
                   <div class="action-buttons">
-                    <button class="action-btn success-btn">Done</button>
-                    <button class="action-btn danger-btn">Remove</button>
+                    <button
+                      class="action-btn success-btn"
+                      @click.prevent="orderStatus(order.cartId, 'done')"
+                    >
+                      Done
+                    </button>
+                    <button
+                      class="action-btn danger-btn"
+                      @click.prevent="orderStatus(order.cartId, 'deleted')"
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -307,6 +317,7 @@ export default {
       customers: [],
       orders: [],
       orderAPI: 'http://localhost:8000/getOrdersAdmin.php',
+      orderStatusAPI: 'http://localhost:8000/statusChange.php',
     }
   },
   methods: {
@@ -383,6 +394,33 @@ export default {
         } else {
           console.log('Error')
           this.isLoading = false
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async orderStatus(cartId, work) {
+      try {
+        this.isLoading = true
+
+        const response = await fetch(this.orderStatusAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'status',
+            id: cartId,
+            work: work,
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.isLoading = false
+          this.getOrders()
         }
       } catch (error) {
         console.log(error)
@@ -691,6 +729,11 @@ export default {
 .pending {
   background: #fff7ed;
   color: #ea580c;
+}
+
+.deleted {
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .font-bold {
