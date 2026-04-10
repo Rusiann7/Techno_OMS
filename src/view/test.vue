@@ -2,11 +2,14 @@
   <div class="main-content">
     <div class="container">
       <h1>Made and Copyrighted by Rusiann co. and Devsparks</h1>
+      <br />
       <h2>Other codes used in this project, go to their respective creators. Thanks</h2>
+      <br />
       <p>
         Special thanks to the A.I. that debugged this entire mess of a codebase and shout out to the
         school.
       </p>
+      <br />
 
       <p>This is Gawr Gura say hi.</p>
 

@@ -2,6 +2,11 @@
 
 require 'config.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 use Firebase\JWT\JWT;
 
 define('JWT_SECRET_KEY', 'technoOMStechnoOMStechnoOMStechnoOMStechnoOMS');
@@ -45,14 +50,14 @@ if($action === "loginA"){
                 "is_admin" => $loginData['is_admin']
             ]);
         }else {
-            echo json_encode(["success" => false, "message" => "Password Error"]);
             http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Password Error"]);
         }
     }else {
-        echo json_encode(["success" => false, "message" => "Email not found"]);
         http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Email not found"]);
     }
 }else {
-    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "Invalid Action"]);
 }
