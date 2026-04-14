@@ -334,6 +334,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'getProducts',
@@ -361,6 +362,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'getCustomers',
@@ -385,6 +387,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'getOrders',
@@ -413,6 +416,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'status',

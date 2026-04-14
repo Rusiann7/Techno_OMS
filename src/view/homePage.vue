@@ -339,6 +339,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'addToCart',
@@ -372,6 +373,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'getProducts',
@@ -399,6 +401,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'getItemsCart',
@@ -426,6 +429,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'orderItems',
@@ -457,6 +461,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify({
             action: 'getOrders',
