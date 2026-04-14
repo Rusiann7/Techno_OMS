@@ -294,8 +294,84 @@
                   <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                   <path d="m15 5 4 4" />
                 </svg>
-                <span>Manage Product</span>
+                <span
+                  ><button @click="editProduct(product.product_id)">Manage Product</button></span
+                >
               </button>
+            </div>
+          </div>
+
+          <!-- Product Edit Modal -->
+          <div v-if="modal" class="modal-overlay" @click.self="modal = false">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Edit Product</h2>
+                <button class="close-btn" @click="modal = false">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Product Name</label>
+                  <input
+                    type="text"
+                    v-model="selectedProduct.name"
+                    class="form-input"
+                    placeholder="Enter product name"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Category</label>
+                  <input
+                    type="text"
+                    v-model="selectedProduct.cat"
+                    class="form-input"
+                    placeholder="Enter category"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea
+                    v-model="selectedProduct.desc"
+                    class="form-input"
+                    rows="3"
+                    placeholder="Enter product description"
+                  ></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    v-model="selectedProduct.price"
+                    class="form-input"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button class="action-btn danger-btn" @click="modal = false">Cancel</button>
+                <button
+                  class="primary-btn-gradient save-btn"
+                  @click.prevent="editProductDB()"
+                  @click="modal = false"
+                >
+                  Save Changes
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -323,6 +399,9 @@ export default {
       orders: [],
       orderAPI: `${url2}/getOrdersAdmin.php`,
       orderStatusAPI: `${url2}/statusChange.php`,
+      modal: false,
+      selectedProduct: [],
+      editProductAPI: `${url2}/editProducts.php`,
     }
   },
   methods: {
@@ -436,10 +515,52 @@ export default {
       }
     },
 
+    async editProductDB() {
+      try {
+        this.isLoading = true
+
+        const response = await fetch(this.editProductAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'applicatio/json',
+          },
+          body: JSON.stringify({
+            action: 'editProducts',
+            ...this.selectedProduct,
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.isLoading = false
+          this.getItems()
+        } else {
+          this.isLoading = false
+          console.log('error')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     adminCheck() {
       if (this.is_admin != 1) {
         this.$router.replace('/login-admin')
       }
+    },
+
+    editProduct(id) {
+      const p = this.items.find((product) => product.product_id === id)
+
+      this.selectedProduct = {
+        name: p.product_name,
+        cat: p.product_cat,
+        desc: p.product_desc,
+        price: p.product_price,
+        id: p.product_id,
+      }
+      this.modal = true
     },
 
     logout() {
@@ -980,5 +1101,123 @@ export default {
   .product-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: modalIn 0.3s ease-out forwards;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f1f5f9;
+  color: #ef4444;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.form-input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+  color: #1e293b;
+  font-family: inherit;
+  transition: all 0.2s;
+  background: #f8fafc;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #a855f7;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.save-btn {
+  width: auto;
+  padding: 0.65rem 1.5rem;
 }
 </style>
