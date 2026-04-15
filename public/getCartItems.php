@@ -16,6 +16,13 @@ if($action === "getItemsCart"){
     $user_id = $data['userId'];
     $cart = [];
 
+    if(!$user_id || $user_id === '0' || $user_id === 0){
+
+    http_response_code(200);
+    echo json_encode(["message" => "Login First"]);
+    exit;
+    }
+
     $sql = "
     SELECT p.product_name, p.category, p.price, c.quantity, 
     c.request, c.created_at, c.product_id, c.id AS cartId,
