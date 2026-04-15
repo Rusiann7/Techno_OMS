@@ -30,6 +30,7 @@ if($action === "getProducts"){
                 "product_price" => $row['price'],
                 "product_stock" => $row['stock'],
                 "prodcut_sold" => $row['sold'],
+                "product_image" => $row['image_file']
             ];
         }
 

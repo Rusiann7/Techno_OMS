@@ -27,7 +27,8 @@ if($action === "getProducts"){
                 "product_name" => $row['product_name'],
                 "product_cat" => $row['category'],
                 "product_desc" => $row['description'],
-                "product_price" => $row['price']
+                "product_price" => $row['price'],
+                "product_image" => $row['image_file']
             ];
         }
 

@@ -265,7 +265,7 @@
         <div v-if="currentTab === 'products'" class="product-grid">
           <div class="product-card" v-for="product in items" :key="product.product_id">
             <div class="image-container">
-              <img src="../asset/teto.jpg" :alt="product.product_name" />
+              <img :src="'/' + product.product_image" :alt="product.product_name" />
               <div class="category-chip">{{ product.product_cat || 'Category' }}</div>
             </div>
             <div class="card-details">
