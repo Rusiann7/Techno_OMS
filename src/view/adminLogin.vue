@@ -21,6 +21,10 @@
         </div>
         <h1 class="brand-name">DevSparks</h1>
         <p class="brand-tagline">Sublimation & DTF Printing Technology</p>
+
+        <button class="admin-gradient-btn" @click="this.$router.replace('/login')">
+          Go to customer login
+        </button>
       </div>
     </header>
 
