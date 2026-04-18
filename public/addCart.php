@@ -22,8 +22,10 @@ if($action === "addToCart"){
     }else {
         echo json_encode(["success" => false, "message" => "Error in the DB"]);
         http_response_code(500);
+        exit;
     }
 }else {
     echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
+    exit;
 }

@@ -522,6 +522,8 @@ export default {
     logoutState() {
       if (!this.user_id || this.user_id === '0') {
         this.logoutIcon = false
+      } else {
+        this.logoutIcon = true
       }
     },
   },
