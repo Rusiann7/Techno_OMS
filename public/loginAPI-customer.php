@@ -47,14 +47,17 @@ if($action === "loginC"){
                 "user_id" => $loginData['user_id']
             ]);
         }else {
-            echo json_encode(["success" => false, "message" => "Password Error"]);
             http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Password Error"]);
+            exit;
         }
     }else {
-        echo json_encode(["success" => false, "message" => "Email not found"]);
         http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Email not found"]);
+        exit;
     }
 }else {
-    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "Invalid Action"]);
+    exit;
 }

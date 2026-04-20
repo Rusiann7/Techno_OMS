@@ -64,17 +64,17 @@ if($action === "signup"){
                 exit;
             }
         }else {
-            echo json_encode(["success" => false, "message" => "Failed to insert into Users"]);
             http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Failed to insert into Users"]);
             exit;
         }
     }else {
-        echo json_encode(["success" => false, "message" => "User already exists"]);
         http_response_code(400);
+        echo json_encode(["success" => false, "message" => "User already exists"]);
         exit;
     }
 }else {
-    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     exit;
 }

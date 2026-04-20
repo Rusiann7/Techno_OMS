@@ -52,12 +52,15 @@ if($action === "loginA"){
         }else {
             http_response_code(400);
             echo json_encode(["success" => false, "message" => "Password Error"]);
+            exit;
         }
     }else {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Email not found"]);
+        exit;
     }
 }else {
     http_response_code(400);
     echo json_encode(["success" => false, "message" => "Invalid Action"]);
+    exit;
 }

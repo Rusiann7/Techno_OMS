@@ -20,12 +20,12 @@ if($action === "addToCart"){
     if($conn -> query($sql) === true) {
         echo json_encode(["success" => true]);
     }else {
-        echo json_encode(["success" => false, "message" => "Error in the DB"]);
         http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Error in the DB"]);
         exit;
     }
 }else {
-    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     exit;
 }

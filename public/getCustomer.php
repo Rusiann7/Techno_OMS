@@ -42,13 +42,13 @@ if($action === "getCustomers"){
         echo json_encode(["success" => true, "customers" => $customers]);
 
     }else {
-        echo json_encode(["success" => false, "message" => "DB error"]);
         http_response_code(500);
+        echo json_encode(["success" => false, "message" => "DB error"]);
         exit;
     }
 
 }else{
-    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "Invalid Action"]);
     exit;
 }

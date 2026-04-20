@@ -34,10 +34,12 @@ if($action === "getProducts"){
 
         echo json_encode(["success" => true, "products" => $products, "product_id" => $product_id]);
     }else {
-        echo json_encode(["success" => false, "message" => "Failed to gather data"]);
         http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Failed to gather data"]);
+        exit;
     }
 }else {
-    echo json_encode(["success" => false, "message" => "Invalid action"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "Invalid action"]);
+    exit;
 }
