@@ -21,10 +21,12 @@ if($action === "getCustomers"){
     u.created_at, 
     c.fullname, 
     c.id AS customerID,
-    COUNT(cart.id) AS total_orders
+    COUNT(DISTINCT cart.id) AS total_orders,
+    SUM(IFNULL(cart.quantity * p.price, 0)) AS total_spent
     FROM Users u
     INNER JOIN Customer c ON c.user_id = u.id
     LEFT JOIN Cart cart ON cart.user_id = u.id AND cart.is_checkout = 1
+    LEFT JOIN Products p ON p.id = cart.product_id
     GROUP BY u.id, u.email, u.created_at, c.fullname, c.id;";
 
     $result = $conn->query($sql);
@@ -35,7 +37,8 @@ if($action === "getCustomers"){
                 "email" => $row['email'],
                 "created_at" => $row['created_at'],
                 "fullname" => $row['fullname'],
-                "total_orders" => $row['total_orders']
+                "total_orders" => $row['total_orders'],
+                "total_spent" => $row['total_spent']
             ];
         }
 

@@ -121,7 +121,7 @@
         <div class="stat-card products">
           <div class="stat-info">
             <label>Products</label>
-            <h2 class="stat-value">4</h2>
+            <h2 class="stat-value">{{ productNumber }}</h2>
           </div>
           <div class="stat-icon-box">
             <svg
@@ -191,7 +191,7 @@
 
             <tbody>
               <tr v-for="order in orders" :key="order.cartId">
-                <td class="font-bold">Temp Data</td>
+                <td class="font-bold">{{ order.customer_name }}</td>
                 <td class="font-bold" style="color: #1e293b">{{ order.product_name }}</td>
                 <td
                   class="text-muted"
@@ -254,7 +254,7 @@
                 <td>
                   <span class="order-count-pill">{{ customer.total_orders }}</span>
                 </td>
-                <td class="font-bold" style="color: #1e293b">Temp Data</td>
+                <td class="font-bold" style="color: #1e293b">${{ customer.total_spent }}</td>
                 <td class="text-muted">{{ customer.created_at }}</td>
               </tr>
             </tbody>

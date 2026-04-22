@@ -18,6 +18,7 @@ if($action === "getOrders"){
     SELECT p.product_name, p.category, p.price, c.quantity, 
     c.request, c.created_at, c.product_id, c.id AS cartId,
     c.is_checkout, c.is_completed, c.is_deleted,
+    cust.fullname AS customer_name,
     CASE 
         WHEN c.is_completed = 1 THEN 'Completed'
         WHEN c.is_deleted = 1 THEN 'Deleted'
@@ -25,6 +26,7 @@ if($action === "getOrders"){
     END AS status
     FROM Cart c 
     INNER JOIN Products p ON p.id = c.product_id
+    INNER JOIN Customer cust ON cust.user_id = c.user_id
     WHERE c.is_checkout = 1
     ORDER BY c.created_at";
 
@@ -43,6 +45,7 @@ if($action === "getOrders"){
                 "created_at" => $row['created_at'],
                 "cartId" => $row['cartId'],
                 "status" => $row['status'],
+                "customer_name" => $row['customer_name']
             ];
         }
 
