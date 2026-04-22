@@ -25,8 +25,10 @@ if($action === "editProducts"){
     }else{
         http_response_code(500);
         echo json_encode(["success" => false, "message" => "DB Error"]);
+        exit;
     }
 }else{
     http_response_code(400);
     echo json_encode(["success" => false, "message" => "Invalid Action"]);
+    exit;
 }
