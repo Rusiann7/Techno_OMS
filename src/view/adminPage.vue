@@ -218,7 +218,7 @@
                   <div class="action-buttons">
                     <button
                       class="action-btn success-btn"
-                      @click.prevent="orderStatus(order.cartId, 'done')"
+                      @click.prevent="orderStatus(order.cartId, 'done', order.quantity)"
                     >
                       Done
                     </button>
@@ -487,7 +487,7 @@ export default {
       }
     },
 
-    async orderStatus(cartId, work) {
+    async orderStatus(cartId, work, quantity) {
       try {
         this.isLoading = true
 
@@ -501,6 +501,7 @@ export default {
             action: 'status',
             id: cartId,
             work: work,
+            qnt: quantity,
           }),
         })
 
@@ -509,6 +510,7 @@ export default {
         if (result.success) {
           this.isLoading = false
           this.getOrders()
+          this.getItems()
         }
       } catch (error) {
         console.log(error)

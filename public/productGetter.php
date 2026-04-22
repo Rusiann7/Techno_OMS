@@ -28,6 +28,8 @@ if($action === "getProducts"){
                 "product_cat" => $row['category'],
                 "product_desc" => $row['description'],
                 "product_price" => $row['price'],
+                "product_stock" => $row['stock'],
+                "product_sold" => $row['sold'],
                 "product_image" => $row['image_file']
             ];
         }
