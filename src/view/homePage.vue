@@ -123,7 +123,7 @@
           <div class="card-details">
             <div class="card-top">
               <h3 class="p-name">{{ product.product_name }}</h3>
-              <span class="p-price">${{ product.product_price }}</span>
+              <span class="p-price">₱{{ product.product_price }}</span>
             </div>
             <p class="p-desc">{{ product.product_desc }}</p>
             <button
@@ -176,7 +176,7 @@
 
         <div class="cost-summary">
           <span>Subtotal</span>
-          <span class="total-price">${{ quantity * selected_cost }}</span>
+          <span class="total-price">₱{{ quantity * selected_cost }}</span>
         </div>
 
         <div class="modal-btns">
@@ -207,8 +207,8 @@
               <p class="note" v-if="item.request">Note: {{ item.request }}</p>
             </div>
             <div class="item-right">
-              <p class="item-math">${{ item.price }} × {{ item.quantity }}</p>
-              <p class="item-total">${{ item.price * item.quantity }}</p>
+              <p class="item-math">₱{{ item.price }} × {{ item.quantity }}</p>
+              <p class="item-total">₱{{ item.price * item.quantity }}</p>
             </div>
           </div>
         </div>
@@ -217,7 +217,7 @@
         <div class="modal-bottom" v-if="cart.length > 0">
           <div class="sum-row">
             <span>Total Value:</span>
-            <span class="big-price">${{ subtotal }}</span>
+            <span class="big-price">₱{{ subtotal }}</span>
           </div>
           <button
             class="primary-btn full"
@@ -248,8 +248,8 @@
               <p class="tag">{{ order.category }} • {{ order.created_at }}</p>
             </div>
             <div class="item-right">
-              <p class="item-math">${{ order.price }} × {{ order.quantity }}</p>
-              <p class="item-total">${{ order.price * order.quantity }}</p>
+              <p class="item-math">₱{{ order.price }} × {{ order.quantity }}</p>
+              <p class="item-total">₱{{ order.price * order.quantity }}</p>
             </div>
           </div>
         </div>

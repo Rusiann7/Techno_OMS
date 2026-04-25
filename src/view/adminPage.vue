@@ -207,7 +207,7 @@
                 <td>
                   <span class="order-count-pill">{{ order.quantity }}</span>
                 </td>
-                <td class="font-bold" style="color: #a855f7">${{ order.total }}</td>
+                <td class="font-bold" style="color: #a855f7">₱{{ order.total }}</td>
                 <td>
                   <span :class="['status-badge', order.status.toLowerCase()]">
                     {{ order.status }}
@@ -254,7 +254,7 @@
                 <td>
                   <span class="order-count-pill">{{ customer.total_orders }}</span>
                 </td>
-                <td class="font-bold" style="color: #1e293b">${{ customer.total_spent }}</td>
+                <td class="font-bold" style="color: #1e293b">₱{{ customer.total_spent }}</td>
                 <td class="text-muted">{{ customer.created_at }}</td>
               </tr>
             </tbody>
@@ -271,7 +271,7 @@
             <div class="card-details">
               <div class="card-top">
                 <h3 class="p-name">{{ product.product_name }}</h3>
-                <span class="p-price">${{ product.product_price }}</span>
+                <span class="p-price">₱{{ product.product_price }}</span>
               </div>
               <p class="p-desc">{{ product.product_desc }}</p>
 
