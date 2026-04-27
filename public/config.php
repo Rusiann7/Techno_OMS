@@ -9,13 +9,11 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, ngrok-skip-browser-warning");
 header('Access-Control-Max-Age: 86400');
 
-// Handle preflight here globally — no need to repeat in every file
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-// Only set JSON content type for non-OPTIONS requests (already exited above anyway)
 header('Content-Type: application/json; charset=utf-8');
 
 require __DIR__ . '/../vendor/autoload.php';
