@@ -280,7 +280,7 @@
                 <span class="stat-badge sold">Sold: {{ product.product_sold }}</span>
               </div>
 
-              <button class="primary-btn-gradient">
+              <button class="primary-btn-gradient" @click="editProduct(product.product_id)">
                 <svg
                   width="16"
                   height="16"
@@ -294,9 +294,7 @@
                   <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                   <path d="m15 5 4 4" />
                 </svg>
-                <span
-                  ><button @click="editProduct(product.product_id)">Manage Product</button></span
-                >
+                <span>Manage Product</span>
               </button>
             </div>
           </div>
@@ -1094,14 +1092,67 @@ export default {
   .admin-navbar {
     padding: 1rem 1.5rem;
   }
+
+  .nav-controls {
+    gap: 0.75rem;
+  }
+
+  .logout-btn span {
+    display: none;
+  }
+
   .dashboard-content {
     padding: 1.5rem 1rem;
   }
+
+  .management-section {
+    padding: 1.25rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
+
   .product-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .management-table th,
+  .management-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+    margin: 0 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-badge {
+    display: none;
+  }
+
+  .brand-text p {
+    display: none;
+  }
+
+  .nav-tab {
+    padding: 0.6rem 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .image-container {
+    height: 180px;
   }
 }
 

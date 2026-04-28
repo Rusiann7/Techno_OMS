@@ -1051,15 +1051,66 @@ export default {
   font-weight: 500;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 1.25rem;
+  }
+
+  .cart-btn span:not(.count-badge) {
+    display: none;
+  }
+
+  .logout-link span {
+    display: none;
+  }
+
+  .main-title {
+    font-size: 2.25rem;
+  }
+
+  .content-body {
+    padding: 2rem 1.25rem;
+  }
+
+  .modal-card {
+    padding: 1.5rem;
+    border-radius: 24px;
+  }
+
+  .modal-card.large {
+    height: 90vh;
+  }
+
+  .list-item {
+    padding: 1rem;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-sub {
+    display: none;
+  }
+
+  .main-title {
+    font-size: 1.85rem;
+  }
+
+  .hero-text {
+    margin-bottom: 2rem;
+  }
+
   .product-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
-  .main-title {
-    font-size: 2rem;
-  }
+
   .modal-btns {
     grid-template-columns: 1fr;
+  }
+
+  .modal-head h3 {
+    font-size: 1.4rem;
   }
 }
 

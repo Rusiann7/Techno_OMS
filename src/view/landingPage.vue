@@ -230,15 +230,14 @@ export default {
 
 .landing-wrapper {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(135deg, #a21caf 0%, #db2777 30%, #ea580c 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 2rem 1rem;
   color: white;
-  overflow: hidden;
 }
 
 /* Header */
