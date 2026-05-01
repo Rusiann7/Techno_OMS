@@ -128,7 +128,14 @@
             <p class="p-desc">{{ product.product_desc }}</p>
             <button
               class="primary-btn-gradient"
-              @click="modalOpen(product.product_name, product.product_price, product.product_id)"
+              @click="
+                modalOpen(
+                  product.product_name,
+                  product.product_price,
+                  product.product_id,
+                  product.product_cat,
+                )
+              "
             >
               <svg
                 width="16"
@@ -154,36 +161,80 @@
     <!-- Modals -->
     <!-- Order Now Modal -->
     <div class="modal-backdrop" v-if="modal" @click.self="modal = false">
-      <div class="modal-card">
-        <div class="modal-head">
-          <h3>Order {{ selected }}</h3>
-          <button class="close-icon" @click="modal = false">&times;</button>
-        </div>
-        <p class="modal-desc">Fine-tune your custom product request below.</p>
+      <div class="modal-card order-modal">
+        <div class="order-modal-content">
+          <!-- Left Section: Image and Navigation -->
+          <div class="order-modal-left">
+            <div class="modal-image-container">
+              <img :src="currentimage" alt="{{currentImageName}}" />
+            </div>
 
-        <div class="input-field">
-          <label>Quantity</label>
-          <input type="number" v-model="quantity" min="1" />
-        </div>
+            <p>{{ currentImageName }}</p>
+            <div class="image-navigation">
+              <button class="nav-arrow" title="Previous" @click="previousImage()">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+              <button class="nav-arrow" title="Next" @click="nextImage()">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-        <div class="input-field">
-          <label>Custom Design Request (Optional)</label>
-          <textarea
-            v-model="request"
-            placeholder="Describe your custom IT-themed design..."
-          ></textarea>
-        </div>
+          <!-- Right Section: Details and Form -->
+          <div class="order-modal-right">
+            <div class="modal-head">
+              <h3>Order {{ selected }}</h3>
+              <button class="close-icon" @click="modal = false">&times;</button>
+            </div>
+            <p class="modal-desc">Fine-tune your custom product request below.</p>
 
-        <div class="cost-summary">
-          <span>Subtotal</span>
-          <span class="total-price">₱{{ quantity * selected_cost }}</span>
-        </div>
+            <div class="input-field">
+              <label>Quantity</label>
+              <input type="number" v-model="quantity" min="1" />
+            </div>
 
-        <div class="modal-btns">
-          <button class="secondary-btn" @click="modal = false">Cancel</button>
-          <button class="primary-btn" @click="addCart(quantity, request, selected_id)">
-            Add to cart
-          </button>
+            <div class="input-field">
+              <label>Custom Design Request (Optional)</label>
+              <textarea
+                v-model="request"
+                placeholder="Describe your custom IT-themed design..."
+              ></textarea>
+            </div>
+
+            <div class="cost-summary">
+              <span>Subtotal</span>
+              <span class="total-price">₱{{ quantity * selected_cost }}</span>
+            </div>
+
+            <div class="modal-btns">
+              <button class="secondary-btn" @click="modal = false">Cancel</button>
+              <button class="primary-btn" @click="addCart(quantity, request, selected_id)">
+                Add to cart
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -332,6 +383,8 @@ export default {
       authModal: false,
       selected: null,
       selected_cost: 0,
+      selected_category: null,
+      selected_array: 'design',
       quantity: 1,
       request: null,
       cartAPI: `${url2}/addCart.php`,
@@ -346,6 +399,10 @@ export default {
       isSuccess: false,
       isFailed: false,
       logoutIcon: false,
+      getDesignAPI: `${url2}/getDesigns.php`,
+      design: [],
+      design_drinkware: [],
+      currentIndex: 0,
     }
   },
 
@@ -366,6 +423,7 @@ export default {
             itemQuantity: qnt,
             itemRequest: request,
             userId: this.user_id,
+            design: this.currentImageName,
           }),
         })
 
@@ -502,7 +560,36 @@ export default {
       }
     },
 
-    modalOpen(itemName, itemCost, itemId) {
+    async getDesigns() {
+      try {
+        this.isLoading = true
+
+        const response = await fetch(this.getDesignAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'getDesigns',
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.design = result.design
+          this.design_drinkware = result.design_drinkware
+          this.isLoading = false
+        } else {
+          console.log('error')
+          this.isLoading = false
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    modalOpen(itemName, itemCost, itemId, itemCategory) {
       if (!this.user_id || this.user_id === '0') {
         this.authModal = true
         return
@@ -510,6 +597,7 @@ export default {
       this.selected = itemName
       this.selected_cost = itemCost
       this.selected_id = itemId
+      this.selected_category = itemCategory
       this.modal = true
     },
 
@@ -526,6 +614,33 @@ export default {
         this.logoutIcon = true
       }
     },
+
+    nextImage() {
+      switch (this.selected_category) {
+        case 'Drinkware':
+          this.currentIndex = (this.currentIndex + 1) % this.design_drinkware.length
+          this.selected_array = 'design_drinkware'
+          break
+        default:
+          this.currentIndex = (this.currentIndex + 1) % this.design.length
+          this.selected_array = 'design'
+          console.log(this.design[this.currentIndex])
+      }
+    },
+
+    previousImage() {
+      switch (this.selected_category) {
+        case 'Drinkware':
+          this.currentIndex =
+            (this.currentIndex - 1 + this.design_drinkware.length) % this.design_drinkware.length
+          this.selected_array = 'design_drinkware'
+          break
+        default:
+          this.currentIndex = (this.currentIndex - 1 + this.design.length) % this.design.length
+          this.selected_array = 'design'
+          console.log(this.design[this.currentIndex])
+      }
+    },
   },
 
   mounted() {
@@ -533,6 +648,7 @@ export default {
     this.getCartItems()
     this.getOrderItems()
     this.logoutState()
+    this.getDesigns()
   },
 
   computed: {
@@ -552,6 +668,18 @@ export default {
 
     orderItemsCount() {
       return this.orders.length
+    },
+
+    currentimage() {
+      const arr = this[this.selected_array]
+      if (!arr || arr.length === 0) return ''
+      return '/' + arr[this.currentIndex].image
+    },
+
+    currentImageName() {
+      const arr = this[this.selected_array]
+      if (!arr || arr.length === 0) return ''
+      return arr[this.currentIndex].image
     },
   },
 }
@@ -846,6 +974,78 @@ export default {
   gap: 20px;
 }
 
+/* Order Now Modal Enhancements */
+.modal-card.order-modal {
+  max-width: 800px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.order-modal-content {
+  display: flex;
+  min-height: 500px;
+}
+
+.order-modal-left {
+  flex: 1;
+  background: #f8fafc;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #f1f5f9;
+}
+
+.modal-image-container {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  background: white;
+  margin-bottom: 1.5rem;
+}
+
+.modal-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-navigation {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-arrow {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-arrow:hover {
+  background: #7c3aed;
+  color: white;
+  border-color: #7c3aed;
+  transform: translateY(-2px);
+}
+
+.order-modal-right {
+  flex: 1.2;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
 .modal-card.large {
   max-width: 850px;
   height: 85vh;
@@ -1075,6 +1275,20 @@ export default {
   .modal-card {
     padding: 1.5rem;
     border-radius: 24px;
+  }
+
+  .order-modal-content {
+    flex-direction: column;
+  }
+
+  .order-modal-left {
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 1.5rem;
+  }
+
+  .order-modal-right {
+    padding: 1.5rem;
   }
 
   .modal-card.large {

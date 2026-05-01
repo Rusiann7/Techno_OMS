@@ -181,6 +181,7 @@
                 <th>Customer</th>
                 <th>Product</th>
                 <th>Request</th>
+                <th>Design</th>
                 <th>Quantity</th>
                 <th>Total</th>
                 <th>Status</th>
@@ -204,6 +205,7 @@
                 >
                   {{ order.request || 'None' }}
                 </td>
+                <td>{{ order.design }}</td>
                 <td>
                   <span class="order-count-pill">{{ order.quantity }}</span>
                 </td>
