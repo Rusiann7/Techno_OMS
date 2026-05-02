@@ -162,6 +162,7 @@
     <!-- Order Now Modal -->
     <div class="modal-backdrop" v-if="modal" @click.self="modal = false">
       <div class="modal-card order-modal">
+        <button class="modal-close-fixed" @click="modal = false">&times;</button>
         <div class="order-modal-content">
           <!-- Left Section: Image and Navigation -->
           <div class="order-modal-left">
@@ -196,7 +197,7 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <path d="m6 9 6 6 6-6" />
+                  <path d="m9 18 6-6-6-6" />
                 </svg>
               </button>
             </div>
@@ -206,7 +207,6 @@
           <div class="order-modal-right">
             <div class="modal-head">
               <h3>Order {{ selected }}</h3>
-              <button class="close-icon" @click="modal = false">&times;</button>
             </div>
             <p class="modal-desc">Fine-tune your custom product request below.</p>
 
@@ -979,6 +979,7 @@ export default {
   max-width: 800px;
   padding: 0;
   overflow: hidden;
+  position: relative;
 }
 
 .order-modal-content {
@@ -1037,6 +1038,32 @@ export default {
   color: white;
   border-color: #7c3aed;
   transform: translateY(-2px);
+}
+
+.modal-close-fixed {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 110;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.modal-close-fixed:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: rotate(90deg);
 }
 
 .order-modal-right {
@@ -1277,18 +1304,34 @@ export default {
     border-radius: 24px;
   }
 
+  .modal-card.order-modal {
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 1rem;
+  }
+
   .order-modal-content {
     flex-direction: column;
+    min-height: auto;
   }
 
   .order-modal-left {
     border-right: none;
     border-bottom: 1px solid #f1f5f9;
-    padding: 1.5rem;
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
   }
 
   .order-modal-right {
     padding: 1.5rem;
+  }
+
+  .modal-close-fixed {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
   }
 
   .modal-card.large {
