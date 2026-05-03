@@ -171,6 +171,12 @@
           >
             Products
           </button>
+          <button
+            :class="['nav-tab', { active: currentTab === 'pos' }]"
+            @click="currentTab = 'pos'"
+          >
+            Point of Sales
+          </button>
         </div>
 
         <!-- Orders Table -->
@@ -375,6 +381,220 @@
             </div>
           </div>
         </div>
+
+        <div v-if="currentTab === 'pos'" class="pos-tab-content">
+          <div class="product-grid">
+            <div class="product-card" v-for="product in items" :key="product.product_id">
+              <div class="image-container">
+                <img :src="'/' + product.product_image" :alt="product.product_name" />
+                <div class="category-chip">{{ product.product_cat || 'Category' }}</div>
+              </div>
+              <div class="card-details">
+                <div class="card-top">
+                  <h3 class="p-name">{{ product.product_name }}</h3>
+                  <span class="p-price">₱{{ product.product_price }}</span>
+                </div>
+                <p class="p-desc">{{ product.product_desc }}</p>
+
+                <div class="stock-stats">
+                  <span class="stat-badge">Stock: {{ product.product_stock }}</span>
+                  <span class="stat-badge sold">Sold: {{ product.product_sold }}</span>
+                </div>
+
+                <button class="primary-btn-gradient" @click="openPosModal(product)">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                    <path d="M3 6h18" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                  </svg>
+                  <span>Quick Sale</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- POS Sale Modal -->
+          <div v-if="pos_modal" class="modal-overlay" @click.self="pos_modal = false">
+            <div class="modal-content pos-modal-wide">
+              <div class="modal-header">
+                <div class="modal-title-group">
+                  <h2>New Transaction</h2>
+                  <p class="modal-subtitle">Processing sale for {{ selectedProduct.name }}</p>
+                </div>
+                <button class="close-btn" @click="pos_modal = false">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="modal-body pos-split-layout">
+                <!-- Left: Design Selector -->
+                <div class="pos-preview-section">
+                  <label class="section-label">Selected Design</label>
+                  <div class="pos-design-card">
+                    <div class="pos-image-frame">
+                      <img :src="currentimage" :alt="currentImageName" v-if="currentimage" />
+                      <div class="no-image-placeholder" v-else>
+                        <svg
+                          width="48"
+                          height="48"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                        >
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                          <circle cx="8.5" cy="8.5" r="1.5" />
+                          <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                        <span>No Design Selected</span>
+                      </div>
+                    </div>
+                    <div class="pos-image-navigator">
+                      <button class="nav-btn-round" @click="previousImage">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path d="m15 18-6-6 6-6" />
+                        </svg>
+                      </button>
+                      <div class="design-info">
+                        <span class="design-label">Design Variant</span>
+                        <span class="design-title">{{ currentImageName || 'Default' }}</span>
+                      </div>
+                      <button class="nav-btn-round" @click="nextImage">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path d="m9 18 6-6-6-6" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Sale Details -->
+                <div class="pos-details-section">
+                  <div class="pos-summary-card">
+                    <div class="summary-item">
+                      <span class="label">Unit Price</span>
+                      <span class="value">₱{{ selectedProduct.price }}</span>
+                    </div>
+                    <div class="summary-item">
+                      <span class="label">Product ID</span>
+                      <span class="value">#{{ selectedProduct.id }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-field">
+                      <label>Custom Design Request (Optional)</label>
+                      <textarea
+                        v-model="request"
+                        placeholder="Describe your custom IT-themed design..."
+                      ></textarea>
+                    </div>
+
+                    <label>Sale Quantity</label>
+                    <div class="pos-qty-stepper">
+                      <button class="stepper-btn" @click="posQuantity > 1 ? posQuantity-- : null">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="3"
+                        >
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                      </button>
+                      <input
+                        type="number"
+                        v-model.number="posQuantity"
+                        min="1"
+                        class="stepper-input"
+                      />
+                      <button class="stepper-btn" @click="posQuantity++">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="3"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="pos-bill-section">
+                    <div class="bill-header">
+                      <span>Order Summary</span>
+                    </div>
+                    <div class="bill-row total">
+                      <span>Total Amount</span>
+                      <span class="total-price">₱{{ selectedProduct.price * posQuantity }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button class="modal-secondary-btn" @click="pos_modal = false">Cancel</button>
+                <button
+                  class="primary-btn-gradient pos-confirm-btn"
+                  @click="posFeature(selectedProduct.id)"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Complete Sale</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -402,6 +622,16 @@ export default {
       modal: false,
       selectedProduct: [],
       editProductAPI: `${url2}/editProducts.php`,
+      getDesignAPI: `${url2}/getDesigns.php`,
+      design: [],
+      design_drinkware: [],
+      currentIndex: 0,
+      selected_array: 'design',
+      selected_category: null,
+      posAPI: `${url2}/posAPI.php`,
+      pos_modal: false,
+      posQuantity: 1,
+      request: null,
     }
   },
   methods: {
@@ -546,6 +776,91 @@ export default {
       }
     },
 
+    async posFeature(id) {
+      try {
+        this.isLoading = true
+
+        const response = await fetch(this.posAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'posFeature',
+            itemId: id,
+            itemQuantity: this.posQuantity,
+            itemRequest: this.request,
+            design: this.currentImageName,
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.isLoading = false
+          this.pos_modal = false
+          this.getItems()
+          this.getOrders()
+        } else {
+          this.isLoading = false
+          console.log('error')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async getDesigns() {
+      try {
+        const response = await fetch(this.getDesignAPI, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'getDesigns',
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          this.design = result.design
+          this.design_drinkware = result.design_drinkware
+        } else {
+          this.isLoading = false
+          console.log('error')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    nextImage() {
+      switch (this.selected_category) {
+        case 'Drinkware':
+          this.currentIndex = (this.currentIndex + 1) % this.design_drinkware.length
+          this.selected_array = 'design_drinkware'
+          break
+        default:
+          this.currentIndex = (this.currentIndex + 1) % this.design.length
+          this.selected_array = 'design'
+      }
+    },
+
+    previousImage() {
+      switch (this.selected_category) {
+        case 'Drinkware':
+          this.currentIndex =
+            (this.currentIndex - 1 + this.design_drinkware.length) % this.design_drinkware.length
+          this.selected_array = 'design_drinkware'
+          break
+        default:
+          this.currentIndex = (this.currentIndex - 1 + this.design.length) % this.design.length
+          this.selected_array = 'design'
+      }
+    },
+
     adminCheck() {
       if (this.is_admin != 1) {
         this.$router.replace('/login-admin')
@@ -571,12 +886,28 @@ export default {
       localStorage.setItem('fullName', 0)
       localStorage.setItem('is_admin', 0)
     },
+
+    openPosModal(product) {
+      this.selectedProduct = {
+        name: product.product_name,
+        cat: product.product_cat,
+        desc: product.product_desc,
+        price: product.product_price,
+        id: product.product_id,
+      }
+      this.selected_category = product.product_cat
+      this.currentIndex = 0
+      this.selected_array = this.selected_category === 'Drinkware' ? 'design_drinkware' : 'design'
+      this.posQuantity = 1
+      this.pos_modal = true
+    },
   },
   mounted() {
     this.getItems()
     this.adminCheck()
     this.getCustomers()
     this.getOrders()
+    this.getDesigns()
   },
   computed: {
     productNumber() {
@@ -593,6 +924,22 @@ export default {
 
     orderNumber() {
       return this.orders.length
+    },
+
+    selectedItemsTotal() {
+      return this.orders
+    },
+
+    currentimage() {
+      const arr = this[this.selected_array]
+      if (!arr || arr.length === 0) return ''
+      return '/' + arr[this.currentIndex].image
+    },
+
+    currentImageName() {
+      const arr = this[this.selected_array]
+      if (!arr || arr.length === 0) return ''
+      return arr[this.currentIndex].image
     },
   },
 }
@@ -619,6 +966,303 @@ export default {
   position: sticky;
   top: 0;
   z-index: 50;
+}
+
+/* POS Modal Split Layout */
+.modal-content.pos-modal-wide {
+  max-width: 850px;
+  width: 95%;
+  max-height: 90vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 25px;
+}
+
+.modal-title-group h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.modal-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.pos-split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.pos-preview-section {
+  padding: 2.5rem;
+  background: #f8fafc;
+  border-right: 1px solid #f1f5f9;
+}
+
+.section-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.pos-design-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pos-image-frame {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+}
+
+.pos-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.no-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: #cbd5e1;
+}
+
+.no-image-placeholder span {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.pos-image-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 0.75rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.nav-btn-round {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #f1f5f9;
+  background: #f8fafc;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn-round:hover {
+  background: #1e293b;
+  color: white;
+  border-color: #1e293b;
+}
+
+.design-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 150px;
+}
+
+.design-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.design-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+}
+
+.pos-details-section {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.pos-summary-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.summary-item {
+  background: #f1f5f9;
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summary-item .label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.summary-item .value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.pos-qty-stepper {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.5rem;
+  width: fit-content;
+}
+
+.stepper-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+.stepper-btn:hover {
+  background: #1e293b;
+  color: white;
+}
+
+.stepper-input {
+  width: 60px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1e293b;
+  outline: none;
+}
+
+.pos-bill-section {
+  margin-top: auto;
+  background: #f1f5f9;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bill-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.bill-row span:last-child {
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.bill-row.total {
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: #1e293b;
+  font-weight: 800;
+}
+
+.total-price {
+  font-size: 1.5rem;
+  color: #f472b6;
+}
+
+.modal-secondary-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #64748b;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-secondary-btn:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.pos-confirm-btn {
+  width: auto;
+  padding: 0.75rem 2rem;
+}
+
+@media (max-width: 640px) {
+  .pos-split-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .nav-brand {
@@ -1274,5 +1918,27 @@ export default {
 .save-btn {
   width: auto;
   padding: 0.65rem 1.5rem;
+}
+
+.input-field {
+  margin-bottom: 1.5rem;
+}
+
+.input-field label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.input-field input,
+.input-field textarea {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  font-family: inherit;
+  font-size: 1rem;
+  background: #f8fafc;
 }
 </style>

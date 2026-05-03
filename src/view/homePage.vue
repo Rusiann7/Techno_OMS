@@ -167,7 +167,7 @@
           <!-- Left Section: Image and Navigation -->
           <div class="order-modal-left">
             <div class="modal-image-container">
-              <img :src="currentimage" alt="{{currentImageName}}" />
+              <img :src="currentimage" :alt="currentImageName" />
             </div>
 
             <p>{{ currentImageName }}</p>
@@ -598,6 +598,11 @@ export default {
       this.selected_cost = itemCost
       this.selected_id = itemId
       this.selected_category = itemCategory
+
+      this.currentIndex = 0
+      this.selected_array = this.selected_category === 'Drinkware' ? 'design_drinkware' : 'design'
+      this.quantity = 1
+
       this.modal = true
     },
 
@@ -624,7 +629,6 @@ export default {
         default:
           this.currentIndex = (this.currentIndex + 1) % this.design.length
           this.selected_array = 'design'
-          console.log(this.design[this.currentIndex])
       }
     },
 
@@ -638,7 +642,6 @@ export default {
         default:
           this.currentIndex = (this.currentIndex - 1 + this.design.length) % this.design.length
           this.selected_array = 'design'
-          console.log(this.design[this.currentIndex])
       }
     },
   },
