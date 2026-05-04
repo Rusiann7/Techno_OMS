@@ -52,7 +52,7 @@
         <div class="stat-card revenue">
           <div class="stat-info">
             <label>Total Revenue</label>
-            <h2 class="stat-value">${{ revenueNumber }}</h2>
+            <h2 class="stat-value">₱{{ revenueNumber }}</h2>
           </div>
           <div class="stat-icon-box">
             <svg

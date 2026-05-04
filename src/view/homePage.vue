@@ -167,7 +167,11 @@
           <!-- Left Section: Image and Navigation -->
           <div class="order-modal-left">
             <div class="modal-image-container">
-              <img :src="currentimage" :alt="currentImageName" />
+              <img
+                :src="currentimage"
+                :alt="currentImageName"
+                style="max-width: 350px; width: 100%; height: auto"
+              />
             </div>
 
             <p>{{ currentImageName }}</p>
@@ -1002,13 +1006,15 @@ export default {
 }
 
 .modal-image-container {
-  width: 100%;
   aspect-ratio: 1;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   background: white;
   margin-bottom: 1.5rem;
+  max-width: 350px;
+  width: 100%;
+  height: auto;
 }
 
 .modal-image-container img {
